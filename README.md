@@ -6,7 +6,7 @@ The highly available point source serverless architecture achieves this by exten
 ![Quick Start architecture for Densify's ITSM-Controlled-Continuous-Optimization](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/architecture.PNG)
 
 **Insight Injection**
-Densify periodically analyzes your infrastructure resource utilization to generate insights to optimize supply allocations.  The specific insight is dependant on the service being optimized.  e.g For EC2, the optimization parameter is InstanceType.  For RDS, the optimization parameter is DBInstanceClass.  For ASGs, the optimization parameter is InstanceType, minSize, maxSize.
+Densify periodically analyzes your infrastructure resource utilization to generate insights to optimize supply allocations.  The specific insight is dependant on the service being optimized.  e.g For EC2, the optimization parameter is *InstanceType*.  For RDS, the optimization parameter is *DBInstanceClass*.  For ASGs, the optimization parameter is *InstanceType, minSize, maxSize*.
 
 A webhook is used to trigger the delivery of the insights to API-gateway upon insight availability.  These insights are pushed and stored within parameter store.  As parameter store is a regional technology, the specific insight is delivered to the region in which the insight's infrastructure service exists.
 
