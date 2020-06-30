@@ -46,6 +46,10 @@ In the current release, this solution will work with the following technologies.
 
 2) A ServiceNow instance has to be available and ready to take on new change requests.  If you do not have one, you can get a free [PDI instance](https://developer.servicenow.com/dev.do) from ServiceNow.
 
-3) An AWS account that has some provisioning EC2, RDS and/or ASG services provisioned an managed through AWS CloudFormation.
+3) The [AWS ITSM connector](https://docs.aws.amazon.com/servicecatalog/latest/adminguide/integrations-servicenow.html) installed on your ServiceNow instance.  
+
+4) An AWS account that has some provisioned EC2, RDS and/or ASG services provisioned and managed through AWS CloudFormation.
+
+## Other
 
 For architectural details, best practices, step-by-step instructions, and customization options, see the deployment guide.  To post feedback, submit feature ideas, or report bugs, use the Issues section of this GitHub repo.
