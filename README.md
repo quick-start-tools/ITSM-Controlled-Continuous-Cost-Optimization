@@ -1,5 +1,9 @@
-# ITSM-Controlled-Continuous-Optimization
-This solution enables change management processes within popular ITSM platforms to control the optimization of infrastructure resources.  These resources include (but not limited to), CPU, Memory, Disk, Network across various on-prem, public cloud and k8s services.  
+# ITSM-Controlled-Continuous-Optimization (ICCO)
+This solution deploys Densify's automation framework (ICCO), designed to enable ITSM change management processes to control the optimization of infrastructure by leveraging the powerful scientifically derived insights from [Densify's Optimization Engine](https://densify.com).
+
+This solution enables change management processes within popular ITSM platforms to control the optimization of infrastructure resources.  The solution leverages Densify, a powerful optimization engine designed to analyze your infrastructure and generate insights 
+
+These resources include (but not limited to), CPU, Memory, Disk, Network across various on-prem, public cloud and k8s services.  
 
 The solution available here will optimize AWS EC2 and RDS services that are managed by CloudFormation.
 
