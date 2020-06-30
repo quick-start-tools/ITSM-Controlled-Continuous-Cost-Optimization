@@ -10,14 +10,22 @@ Densify periodically analyzes your infrastructure resource utilization to genera
 
 A webhook is used to trigger the delivery of the insights to API-gateway upon insight availability.  These insights are pushed and stored within parameter store.  As parameter store is a regional technology, the specific insight is delivered to the region in which the insight's infrastructure service exists.
 
+![Insight Injection](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/InsightInjection.PNG)
+
 **ITSM Change Ticket Creation**
 Cloudwatch events monitor parameter store for new insights or changes to an existing insights state.  When triggered, the CW event will invoke a series of functions to create a change ticket within the configured ITSM platfrom.
+
+![ITSM Ticket Creation](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/CreateITSMTicket.PNG)
 
 **Approval Aquisition**
 Application owners can review the complete scientific analysis behind the insight through the ITSM console.  Th owner can choose to approve or deny the execution of this insight.  If approved, the complete lifecycle of the executed can be viewed from the change ticket.
 
+![Approval Acquisition](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/ApproveInsight.PNG)
+
 **Window Acquisition**
 All changes are executed inside an approved maintenance window, which is scheduled by cloud operations.  To help faciliate the acquisition of a window a work order is created in AWS Ops Center.  This is routed to a cloud ops resource, who can now review the order and schedule an appropriate window.  
+
+![Window Acquisition](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/AcquireMW.PNG)
 
 **Execution**
 On the arrival of the maintenance window, a series of functions trigger and mointor the update process through CloudFormation.  The enhanced CloudFormation templates enable the IaC technology to dynamically reference approved insights directly from the parameter repo.
