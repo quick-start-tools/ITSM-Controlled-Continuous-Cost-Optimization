@@ -21,46 +21,11 @@ All changes are executed inside an approved maintenance window, which is schedul
 
 **Execution**
 On the arrival of the maintenance window, a series of functions trigger and mointor the update process through CloudFormation.  The enhanced CloudFormation templates enable the IaC technology to dynamically reference approved insights directly from the parameter repo.
-
-1) Insight Injection
-  Densify delivers new insights when they are available.  
-2) ITSM Collaboration
-  Enables application owners to review the analysis behind any insight and decide on whether to approve for execution.  
-  Enables cloud operations to schedule a maintenance window to execute the change in a pre-defined window.
-3) Execution
-  Executes the necessary change within the maintenance window, monitors the outcome and informs the necessary parties.
-  
+ 
 In the current release, this solution will work with the following technologies.
 - ITSM Platform: *ServiceNow*
 - Optimization Engine: *Densify*
 - Parameter Repo: *AWS Parameter Store*
 - IaC Technology: *AWS CloudFormation*
 
-
-Requirements
-- A Densify instance connected to your AWS environment that's up and running.
-- ServiceNow running with the AWS service catalog connector installed.  
-- EC2/RDS resources running within your AWS environment that are managed by CloudFormation
-
-The technologies that support this solution are described below.
-
-Parameter Repo
-- Currently Supported
-  - AWS Parameter Store
- 
-ITSM Platforms
-- Currently Supported
-  - ServiceNow
-- Future Support
-  - Jira Service Desk
-
-Work Order Management
-- Currently Supported
-  - AWS Ops Center
-  
-IaC/Deployment Technologies
-- Currently Supported
-  - CloudFormation
-- Future Support
-  - TerraForm
-  - Lambda
+For architectural details, best practices, step-by-step instructions, and customization options, see the deployment guide.  To post feedback, submit feature ideas, or report bugs, use the Issues section of this GitHub repo.
