@@ -1,5 +1,18 @@
 # ITSM-Controlled-Continuous-Optimization (ICCO)
-This solution deploys Densify's automation framework (ICCO), designed to enable ITSM change management processes to control the optimization of infrastructure by leveraging the powerful scientifically derived insights from [Densify's Optimization Engine](https://densify.com).
+This solution deploys Densify's ICCO, designed to enable ITSM change management processes to control the optimization of infrastructure by leveraging powerful scientifically derived insights from [Densify's Optimization Engine](https://densify.com).  
+
+The highly available point source serverless architecture extends your current ITSM change management process to enable both application owners and cloud operations to control the infrastructure optimization process through insight review/approval, maintenance window scheduling and execution.
+
+
+
+1) Insight Injection
+  Densify delivers new insights when they are available.  
+2) ITSM Collaboration
+  Enables application owners to review the analysis behind any insight and decide on whether to approve for execution.  
+  Enables cloud operations to schedule a maintenance window to execute the change in a pre-defined window.
+3) Execution
+  Executes the necessary change within the maintenance window, monitors the outcome and informs the necessary parties.
+  
 
 This solution enables change management processes within popular ITSM platforms to control the optimization of infrastructure resources.  The solution leverages Densify, a powerful optimization engine designed to analyze your infrastructure and generate insights 
 
