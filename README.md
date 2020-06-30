@@ -3,9 +3,11 @@ This solution deploys Densify's ICCO, designed to enable ITSM change management 
 
 The highly available point source serverless architecture achieves this by extending your current ITSM change management process to enable both application owners and cloud operations to tightly control the infrastructure optimization process through insight review/approval, maintenance window scheduling and execution.
 
-## Solution Overview
+## Architecture
 
 ![Quick Start architecture for Densify's ITSM-Controlled-Continuous-Optimization](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/architecture.PNG)
+
+## Sequence Diagrams
 
 **Insight Injection**
 Densify periodically analyzes your infrastructure resource utilization to generate insights to optimize supply allocations.  The specific insight is dependant on the service being optimized.  e.g For EC2, the optimization parameter is *InstanceType*.  For RDS, the optimization parameter is *DBInstanceClass*.  For ASGs, the optimization parameter is *InstanceType, minSize, maxSize*.
