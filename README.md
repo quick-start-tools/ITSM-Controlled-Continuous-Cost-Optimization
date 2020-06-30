@@ -33,11 +33,19 @@ All changes are executed inside an approved maintenance window, which is schedul
 
 **Execution**
 On the arrival of the maintenance window, a series of functions trigger and mointor the update process through CloudFormation.  The enhanced CloudFormation templates enable the IaC technology to dynamically reference approved insights directly from the parameter repo.
- 
+
+## Prerequisites
+
 In the current release, this solution will work with the following technologies.
 - ITSM Platform: *ServiceNow*
 - Optimization Engine: *Densify*
 - Parameter Repo: *AWS Parameter Store*
 - IaC Technology: *AWS CloudFormation*
+
+1) A Densify instance needs to be online and configured to audit and analyze your AWS account.  If you do not already have one, please request a [trial instance](https://www.densify.com/product/trial).
+
+2) A ServiceNow instance has to be available and ready to take on new change requests.  If you do not have one, you can get a free [PDI instance](https://developer.servicenow.com/dev.do) from ServiceNow.
+
+3) An AWS account that has some provisioning EC2, RDS and/or ASG services provisioned an managed through AWS CloudFormation.
 
 For architectural details, best practices, step-by-step instructions, and customization options, see the deployment guide.  To post feedback, submit feature ideas, or report bugs, use the Issues section of this GitHub repo.
