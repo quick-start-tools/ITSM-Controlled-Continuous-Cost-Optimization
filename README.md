@@ -1,9 +1,9 @@
 # ITSM-Controlled-Continuous-Optimization (ICCO)
 This solution deploys Densify's ICCO, designed to enable ITSM change management processes to control the optimization of infrastructure by leveraging powerful scientifically derived insights from [Densify's Optimization Engine](https://densify.com).  
 
-The highly available point source serverless architecture extends your current ITSM change management process to enable both application owners and cloud operations to control the infrastructure optimization process through insight review/approval, maintenance window scheduling and execution.
+The highly available point source serverless architecture achieves this by extending your current ITSM change management process to enable both application owners and cloud operations to tightly control the infrastructure optimization process through insight review/approval, maintenance window scheduling and execution.
 
-
+![Quick Start architecture for Densify's ITSM-Controlled-Continuous-Optimization](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/cherwell-architecture.png)
 
 1) Insight Injection
   Densify delivers new insights when they are available.  
