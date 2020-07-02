@@ -39,6 +39,8 @@ All changes are executed inside an approved maintenance window, which is schedul
 
 On the arrival of the maintenance window, a series of functions trigger and mointor the update process through CloudFormation.  The enhanced CloudFormation templates enable the IaC technology to dynamically reference approved insights directly from the parameter repo.
 
+![Execution](https://github.com/densify-quick-start/ITSM-Controlled-Continuous-Optimization/blob/master/img/ExecuteCF.PNG)
+
 ## Prerequisites
 
 In the current release, this solution will work with the following technologies.
