@@ -15,7 +15,7 @@ def lambda_handler(event, context):
     
     return {
         'statusCode': 200,
-        'body': json.dumps('Hello from Lambda!')
+        'body': json.dumps('Sucessfully Executed!')
     }
 
 def approve_insight(event):
@@ -31,15 +31,15 @@ def approve_insight(event):
         elif input['serviceType'] == "RDS":
             parameterKey = "/densify/iaas/rds/" + input['name'] + "/dbInstanceClass"        
         
-        parameter = ssm_functions.getParameter(parameterKey, input['region'])
-        tags = ssm_functions.list_tags('Parameter', parameterKey, input['region'])
-        label = ssm_functions.getParameterCurrentLabels(parameterKey, input['region'])
+        parameter = ssm_functions.getParameter(parameterKey, region=input['region'])
+        tags = ssm_functions.list_tags('Parameter', parameterKey, region=input['region'])
+        label = ssm_functions.getParameterCurrentLabels(parameterKey, region=input['region'])
         
         if label[0] == 'Initialize':
-            version = ssm_functions.putParameter(parameterKey, tags['recommendedType'], tags['name'], input['region'])
-            ssm_functions.addTagsToResource('Parameter', parameterKey, [{'Key': 'approvalType', 'Value': 'Approved'}], input['region'])
-            ssm_functions.labelParameterVersion(parameterKey, version, ["Approved"], input['region'])
-            ssm_functions.putParameter('/densify/config/lastUpdatedTimestamp', datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"), 'Last time densify pushed an update', input['region'])
+            version = ssm_functions.putParameter(parameterKey, tags['recommendedType'], description=tags['name'], region=input['region'])
+            ssm_functions.addTagsToResource('Parameter', parameterKey, [{'Key': 'approvalType', 'Value': 'Approved'}], region=input['region'])
+            ssm_functions.labelParameterVersion(parameterKey, version, ["Approved"], region=input['region'])
+            ssm_functions.putParameter('/densify/config/lastUpdatedTimestamp', datetime.datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S"), description='Last time densify pushed an update', region=input['region'])
         
     except Exception as error:
         print("Exception caught while approving request. " + str(error))
@@ -58,13 +58,13 @@ def close_insight(event):
         elif input['serviceType'] == "RDS":
             parameterKey = "/densify/iaas/rds/" + input['name'] + "/dbInstanceClass"        
         
-        parameter = ssm_functions.getParameter(parameterKey, input['region'])
-        tags = ssm_functions.list_tags('Parameter', parameterKey, input['region'])
-        label = ssm_functions.getParameterCurrentLabels(parameterKey, input['region'])
+        parameter = ssm_functions.getParameter(parameterKey, region=input['region'])
+        tags = ssm_functions.list_tags('Parameter', parameterKey, region=input['region'])
+        label = ssm_functions.getParameterCurrentLabels(parameterKey, region=input['region'])
         
         if label[0] == 'Approved':
-            version = ssm_functions.putParameter(parameterKey, tags['recommendedType'], tags['name'], input['region'])
-            ssm_functions.labelParameterVersion(parameterKey, version, ["Closed"], input['region'])
+            version = ssm_functions.putParameter(parameterKey, tags['recommendedType'], description=tags['name'], region=input['region'])
+            ssm_functions.labelParameterVersion(parameterKey, version, ["Closed"], region=input['region'])
 
     except Exception as error:
         print("Exception caught while approving request. " + str(error))
