@@ -1,0 +1,289 @@
+Parameters:
+  IAMRoleName:
+    Type: String
+    Description: Specify the name of the IAM role you wish to create.  This must be unique.
+    Default: 'ICO-LambdaExecutionRole'
+Resources:
+  InsightLoaderAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      EndpointConfiguration:
+        Types:
+          - 'REGIONAL'
+      Name: InsightLoaderAPI
+  InsightLoaderResource:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref InsightLoaderAPI
+      ParentId: !GetAtt
+        - InsightLoaderAPI
+        - RootResourceId
+      PathPart: 'load-insights'
+  InsightLoaderMethodResource:
+    DependsOn:
+      - WorkDispatcher
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref InsightLoaderAPI
+      ResourceId: !Ref InsightLoaderResource
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Credentials: !GetAtt LambdaExecutionRole.Arn
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:WorkDispatcher/invocations
+  InsightLoaderDeployment:
+    DependsOn: 
+      - InsightLoaderMethodResource
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref InsightLoaderAPI
+      Description: Production
+      StageName: Production
+  InsightManagementAPI:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      EndpointConfiguration:
+        Types:
+          - 'REGIONAL'
+      Name: InsightManagementAPI
+  Resource1:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref InsightManagementAPI
+      ParentId: !GetAtt 
+        - InsightManagementAPI
+        - RootResourceId
+      PathPart: 'approve'
+  MethodResource1:
+    DependsOn:
+      - APIManageInsight
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref InsightManagementAPI
+      ResourceId: !Ref Resource1
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Credentials: !GetAtt LambdaExecutionRole.Arn
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:APIManageInsight/invocations
+  Resource2:
+    Type: 'AWS::ApiGateway::Resource'
+    Properties:
+      RestApiId: !Ref InsightManagementAPI
+      ParentId: !GetAtt 
+        - InsightManagementAPI
+        - RootResourceId
+      PathPart: 'close'
+  MethodResource2:
+    DependsOn:
+      - APIManageInsight
+    Type: 'AWS::ApiGateway::Method'
+    Properties:
+      RestApiId: !Ref InsightManagementAPI
+      ResourceId: !Ref Resource2
+      HttpMethod: POST
+      AuthorizationType: NONE
+      Integration:
+        Type: AWS_PROXY
+        IntegrationHttpMethod: POST
+        Credentials: !GetAtt LambdaExecutionRole.Arn
+        Uri: !Sub >-
+          arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/arn:aws:lambda:${AWS::Region}:${AWS::AccountId}:function:APIManageInsight/invocations
+  Deployment:
+    DependsOn:
+      - MethodResource1
+      - MethodResource2
+    Type: 'AWS::ApiGateway::Deployment'
+    Properties:
+      RestApiId: !Ref InsightManagementAPI
+      Description: Lambda API Deployment
+      StageName: 'Production'
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Ref IAMRoleName
+      MaxSessionDuration: 8400
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - ssm.amazonaws.com
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: 'AmazonEC2ReadAndUpdatePolicy'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+            - Effect: Allow
+              Action: "ec2:Describe*"
+              Resource: "*"
+            - Effect: Allow
+              Action: "elasticloadbalancing:Describe*"
+              Resource: "*"
+            - Effect: Allow
+              Action:
+              - "cloudwatch:ListMetrics"
+              - "cloudwatch:GetMetricStatistics"
+              - "cloudwatch:Describe*"
+              Resource: "*"
+            - Effect: Allow
+              Action: "autoscaling:Describe*"
+              Resource: "*"
+            - Effect: Allow
+              Action:
+              - "ec2:StopInstances"
+              - "ec2:StartInstances"
+              - "ec2:ModifyInstanceAttribute"
+              Resource: "*"
+        - PolicyName: 'AmazonParameterStoreFullAccess'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                - "ssm:*"
+                Resource:
+                  - Fn::Join:
+                    - ''
+                    - - 'arn:aws:ssm:*:'
+                      - !Ref 'AWS::AccountId'
+                      - ':parameter/densify/*'
+        - PolicyName: 'AmazonRDSReadAndUpdatePolicy'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+            - Action:
+              - "rds:Describe*"
+              - "rds:ListTagsForResource"
+              - "ec2:DescribeAccountAttributes"
+              - "ec2:DescribeAvailabilityZones"
+              - "ec2:DescribeInternetGateways"
+              - "ec2:DescribeSecurityGroups"
+              - "ec2:DescribeSubnets"
+              - "ec2:DescribeVpcAttribute"
+              - "ec2:DescribeVpcs"
+              Effect: Allow
+              Resource: "*"
+            - Action:
+              - "cloudwatch:GetMetricStatistics"
+              - "logs:DescribeLogStreams"
+              - "logs:GetLogEvents"
+              Effect: Allow
+              Resource: "*"
+            - Action:
+              - "rds:Stop*"
+              - "rds:Start*"
+              - "rds:Modify*"
+              Effect: Allow
+              Resource: "*"  
+        - PolicyName: 'AmazonSNSPublishAccess'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement: 
+            - Effect: Allow
+              Action:
+              - "sns:GetTopicAttributes"
+              - "sns:Subscribe"
+              - "sns:Unsubscribe"
+              - "sns:Publish"
+              Resource: "*"
+        - PolicyName: 'CloudWatchLogs'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement: 
+            - Effect: Allow
+              Action:
+              - "logs:CreateLogStream"
+              - "logs:CreateLogGroup"
+              - "logs:PutLogEvents"
+              Resource: "*"
+        - PolicyName: 'OtherPermissions'
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:       
+            - Effect: Allow
+              Action:
+              - "cloudformation:DescribeStackDriftDetectionStatus"
+              - "iam:GetRole"
+              - "cloudformation:DetectStackDrift"
+              - "ssm:RegisterTaskWithMaintenanceWindow"
+              - "lambda:InvokeFunction"
+              - "ssm:GetOpsItem"
+              - "ssm:DeleteMaintenanceWindow"
+              - "ssm:CreateOpsItem"
+              - "ssm:DescribeMaintenanceWindowExecutions"
+              - "ssm:DescribeOpsItems"
+              - "cloudformation:DescribeStacks"
+              - "ssm:UpdateOpsItem"
+              - "cloudformation:DetectStackResourceDrift"
+              - "ssm:UpdateMaintenanceWindow"
+              - "iam:PassRole"
+              - "ssm:RemoveTagsFromResource"
+              - "cloudformation:GetTemplate"
+              - "ssm:DescribeMaintenanceWindows"
+              - "ssm:AddTagsToResource"
+              - "ssm:ListTagsForResource"
+              - "cloudformation:UpdateStack"
+              - "ssm:CreateMaintenanceWindow"
+              - "cloudformation:ListStackResources"
+              - "ssm:GetDocument"
+              Resource: "*"
+      Path: '/'
+  WorkDispatcher:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: 'WorkDispatcher'
+      Handler: work_dispatcher.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 900
+      Environment:
+        Variables:
+            InsightLoaderFunctionName: ProcessNewRecommendations
+      Code:
+        S3Bucket: !Join [ "-", [ densify, repo ] ]
+        S3Key: 'itsm-continuous-optimization/WorkDispatcher.zip'
+      Runtime: python3.8
+  ProcessNewRecommendations:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: 'ProcessNewRecommendations'
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 900
+      Environment:
+        Variables:
+           CancellationThreshold: 300
+           ThreadPoolSize: 10
+      Code:
+        S3Bucket: !Join [ "-", [ densify, repo ] ]
+        S3Key: 'itsm-continuous-optimization/ProcessNewRecommendations.zip'
+      Runtime: python3.8
+  APIManageInsight:
+    Type: 'AWS::Lambda::Function'
+    Properties:
+      FunctionName: 'APIManageInsight'
+      Handler: lambda_function.lambda_handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Timeout: 300
+      Code:
+        S3Bucket: !Join [ "-", [ densify, repo ] ]
+        S3Key: 'itsm-continuous-optimization/APIManageInsight.zip'
+      Runtime: python3.8
+Outputs:
+  InsightLoaderAPIID:
+    Value: !Ref InsightLoaderAPI
+    Description: 'Insight Loader API ID'
+  InsightManagementAPIID:
+    Value: !Ref InsightManagementAPI
+    Description: 'Insight Management API ID'  
